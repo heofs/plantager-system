@@ -6,8 +6,7 @@ import time
 
 
 class Publisher:
-    def __init__(self, exchange_name='test',
-                 routing_key="", host="localhost"):
+    def __init__(self, exchange_name='test', routing_key="", host="localhost"):
         self.exchange_name = exchange_name
         self.routing_key = routing_key
         self.host = host
@@ -40,6 +39,6 @@ if __name__ == "__main__":
             num += 1
             time.sleep(1)
 
-    except(KeyboardInterrupt):
+    except (KeyboardInterrupt):
         pub.close_connection()
         print("\nClosed connection.")

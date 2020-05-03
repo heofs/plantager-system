@@ -3,7 +3,6 @@
 import sqlite3
 import time
 
-
 db_name = '../data/env_data.db'
 table_name = 'sensor_data'
 table_fields = """
@@ -23,12 +22,12 @@ class Database:
     def check_existing_db(self):
         c = self.conn.cursor()
         c.execute(
-            f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'")
+            f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'"
+        )
 
-        if(not c.fetchall()):
+        if (not c.fetchall()):
             x = self.conn.cursor()
-            x.execute(
-                f"CREATE TABLE '{table_name}' ({table_fields})")
+            x.execute(f"CREATE TABLE '{table_name}' ({table_fields})")
             print(f"No table found, created table '{table_name}'.")
 
     def close_connection(self):
@@ -41,9 +40,14 @@ class Database:
         value = data['value']
         created = int(time.time())
         c = self.conn.cursor()
-        values = (sensor_id, env_type, location, value, created, )
-        c.execute(
-            f"INSERT INTO '{table_name}' VALUES (?,?,?,?,?)", values)
+        values = (
+            sensor_id,
+            env_type,
+            location,
+            value,
+            created,
+        )
+        c.execute(f"INSERT INTO '{table_name}' VALUES (?,?,?,?,?)", values)
         self.conn.commit()
 
 
