@@ -25,30 +25,40 @@ import asyncio
 
 
 class Controller(threading.Thread):
-    def __init__(self, *args, **kwargs):
-        super(Controller, self).__init__(*args, **kwargs)
+    def __init__(self):
+        super(Controller, self).__init__()
         self._has_update = False
-        self.cycle = 10
+        self.cycle = 1
+        self.event_loop = asyncio.get_event_loop()
 
     def run(self):
-        while not self._has_update:
-            print("Running cycle")
-            time.sleep(self.cycle)
-        self.update()
+        try:
+            self.task = self.event_loop.create_task(self.task_func())
+            self.event_loop.run_forever()
 
-    def update(self):
-        print("detected update")
-        self.cycle = 0.1
-        self._has_update = False
-        self.run()
+        finally:
+            self.event_loop.close()
+
+    def start_cycle(self):
+        self.task = self.event_loop.create_task(self.task_func())
+
+    async def task_func(self):
+        while True:
+            print('Working...')
+            await asyncio.sleep(self.cycle)
+
+    def task_canceller(self):
+        self.task.cancel()
+        print('canceled task')
 
     def set_cycle(self, new_cycle):
+        self.task_canceller()
         self.cycle = new_cycle
-        self._has_update = True
+        asyncio.ensure_future(self.task_func(), loop=self.event_loop)
 
 
-thread1 = Controller()
-
-thread1.start()
-time.sleep(5)
-thread1.set_cycle(0.1)
+thread = Controller()
+thread.start()
+time.sleep(2)
+thread.set_cycle(0.1)
+print("Finished")
