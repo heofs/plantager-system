@@ -44,21 +44,20 @@ class Controller(threading.Thread):
 
     async def task_func(self):
         while True:
-            print('Working...')
+            print('Working... ')
             await asyncio.sleep(self.cycle)
 
-    def task_canceller(self):
-        self.task.cancel()
-        print('canceled task')
-
     def set_cycle(self, new_cycle):
-        self.task_canceller()
+        print("setting cycle to", new_cycle)
+        self.task.cancel()
         self.cycle = new_cycle
-        asyncio.ensure_future(self.task_func(), loop=self.event_loop)
+        self.task = self.event_loop.create_task(self.task_func())
+        asyncio.ensure_future(self.task, loop=self.event_loop)
 
 
 thread = Controller()
 thread.start()
 time.sleep(2)
-thread.set_cycle(0.1)
-print("Finished")
+thread.set_cycle(2)
+time.sleep(1)
+thread.set_cycle(1)
