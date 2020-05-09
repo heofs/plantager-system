@@ -19,10 +19,6 @@ lights_plan = [{
     "stop": "21:00"
 }]
 
-import threading
-import time
-import asyncio
-
 
 class Controller(threading.Thread):
     def __init__(self):
@@ -32,19 +28,15 @@ class Controller(threading.Thread):
         self.event_loop = asyncio.get_event_loop()
 
     def run(self):
-        try:
-            self.task = self.event_loop.create_task(self.task_func())
-            self.event_loop.run_forever()
-
-        finally:
-            self.event_loop.close()
+        self.task = self.event_loop.create_task(self.task_func())
+        self.event_loop.run_forever()
 
     def start_cycle(self):
         self.task = self.event_loop.create_task(self.task_func())
 
     async def task_func(self):
         while True:
-            print('Working... ')
+            print('Working... ', self.cycle)
             await asyncio.sleep(self.cycle)
 
     def set_cycle(self, new_cycle):
@@ -57,7 +49,23 @@ class Controller(threading.Thread):
 
 thread = Controller()
 thread.start()
-time.sleep(2)
-thread.set_cycle(2)
-time.sleep(1)
-thread.set_cycle(1)
+
+
+def callback(data):
+    print("retrieved data -> %r" % data)
+    # print(data['seconds'])
+    thread.set_cycle(data['seconds'])
+
+
+try:
+    sub = Subscriber(callback, exchange_name=exchange_name)
+    sub.start_consuming()
+
+except (KeyboardInterrupt):
+    sub.close_connection()
+    print("\nClosed connection.")
+
+# time.sleep(2)
+# thread.set_cycle(2)
+# time.sleep(1)
+# thread.set_cycle(1)
