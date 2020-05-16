@@ -35,9 +35,10 @@ if __name__ == "__main__":
     try:
         pub = Publisher(exchange_name=exchange_name)
         while 1:
+            print("Publishing")
             pub.publish_data({"seconds": num})
             num += 1
-            time.sleep(1)
+            time.sleep(3)
 
     except (KeyboardInterrupt):
         pub.close_connection()

@@ -3,7 +3,7 @@
 import sqlite3
 import time
 
-db_name = '../data/env_data.db'
+db_name = '../database/env_data.db'
 table_name = 'sensor_data'
 table_fields = """
     sensor_id TEXT NOT NULL,
