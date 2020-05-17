@@ -6,6 +6,16 @@ export default gql`
     lightCycle: LightCycle!
   }
 
+  type Mutation {
+    lightCycle(value: [UpdateLightCycleInput!]!): LightCycle!
+  }
+
+  input UpdateLightCycleInput {
+    date: String!
+    on: [Int]!
+    off: [Int]!
+  }
+
   type LightCycle {
     name: String!
     value: [Cycle]!
