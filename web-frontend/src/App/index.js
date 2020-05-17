@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+
+import { ApolloProvider } from '@apollo/react-hooks';
+import { apolloClient } from 'utils/apollo';
+
 import LightsControl from './LightsControl';
 
 const Wrapper = styled.div`
@@ -13,9 +17,11 @@ const Wrapper = styled.div`
 
 const App = () => {
   return (
-    <Wrapper>
-      <LightsControl></LightsControl>
-    </Wrapper>
+    <ApolloProvider client={apolloClient}>
+      <Wrapper>
+        <LightsControl />
+      </Wrapper>
+    </ApolloProvider>
   );
 };
 
