@@ -1,10 +1,16 @@
-version: "3.7"
+version: '3.7'
 services:
   app:
     build: ./
     ports:
-      - "4000:4000"
+      - '4000:4000'
     environment:
       SERVER_PORT: 4000
     volumes:
       - ./:/app
+    networks:
+      - plantager-network
+
+networks:
+  plantager-network:
+    external: true

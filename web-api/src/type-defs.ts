@@ -1,16 +1,24 @@
-import { gql } from "apollo-server-express";
+import { gql } from 'apollo-server-express';
 
 export default gql`
   type Query {
-    """
-    Test Message.
-    """
-    person(id: ID!): Person!
-    allPersons: [Person]!
+    setting(name: String!): Setting!
+    lightCycle: LightCycle!
   }
 
-  type Person {
-    id: ID!
-    name: String
+  type LightCycle {
+    name: String!
+    value: [Cycle]!
+  }
+
+  type Cycle {
+    date: String!
+    on: [Int]!
+    off: [Int]!
+  }
+
+  type Setting {
+    name: String!
+    value: String
   }
 `;
