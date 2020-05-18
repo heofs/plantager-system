@@ -22,7 +22,7 @@ export const LightsControl = () => {
   const [updateLights] = useMutation(UPDATE_LIGHT_PLAN);
 
   const addCycle = () => {
-    console.log('Adding cycle');
+    dispatchPlan({ type: 'addCycle' });
   };
 
   useEffect(() => {
@@ -51,7 +51,6 @@ export const LightsControl = () => {
           dots={true}
           value={[lightPlan[0].on[0], lightPlan[0].off[0]]}
           onChange={(range) => {
-            // console.log('Chaning');
             dispatchPlan({ type: 'setStartCycle', payload: range });
           }}
           disabled={loading}
