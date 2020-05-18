@@ -1,7 +1,7 @@
 const db = require('./db');
 const { ApolloError } = require('apollo-server-express');
 
-const lightsCycleColumn = 'lights_cycle';
+const lightsCycleColumn = 'light_cycle';
 
 export default {
   Query: {
@@ -35,7 +35,7 @@ export default {
     },
   },
   Mutation: {
-    lightCycle: (parent: any, args: { name: string; value: JSON }): object => {
+    updateLightCycle: (parent: any, args: { name: string; value: JSON }): object => {
       const text = 'UPDATE user_settings SET value = $1 WHERE name= $2 RETURNING *';
       const values = [JSON.stringify(args.value), lightsCycleColumn];
 

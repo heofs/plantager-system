@@ -7,7 +7,7 @@ export default gql`
   }
 
   type Mutation {
-    lightCycle(value: [UpdateLightCycleInput!]!): LightCycle!
+    updateLightCycle(value: [UpdateLightCycleInput!]!): LightCycle!
   }
 
   input UpdateLightCycleInput {
