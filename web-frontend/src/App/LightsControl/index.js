@@ -48,6 +48,7 @@ export const LightsControl = () => {
     const dateCycles = [...lightPlan];
     dateCycles.shift();
     setDateCycles(dateCycles);
+    console.log(dateCycles);
   }, [lightPlan]);
 
   return (
@@ -81,7 +82,7 @@ export const LightsControl = () => {
                     payload: { index: planIndex, date },
                   })
                 }
-                defaultValue={moment(el.date)}
+                value={moment(el.date)}
                 allowClear={false}
               />
               <Button

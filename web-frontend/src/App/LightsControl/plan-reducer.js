@@ -26,10 +26,11 @@ export const reducer = (state, action) => {
       return newState;
 
     case 'changeDate':
-      state[action.payload.index].date = action.payload.date.format(
+      newState = [...state];
+      newState[action.payload.index].date = action.payload.date.format(
         'YYYY-MM-DD'
       );
-      return state;
+      return newState;
 
     case 'addCycle':
       if (state.length > 1) {
@@ -51,7 +52,7 @@ export const reducer = (state, action) => {
 
     case 'deleteCycle':
       newState = [...state];
-      newState.splice(action.payload.index);
+      newState.splice(action.payload.index, 1);
       return newState;
 
     default:
