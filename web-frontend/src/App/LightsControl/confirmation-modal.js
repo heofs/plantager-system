@@ -18,26 +18,27 @@ const ConfirmationModal = ({
     });
   };
 
-  const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setModalVisible(false);
-  };
-  const startPlan = lightPlan[0];
-  const startRange = [startPlan.on[0], startPlan.off[0]];
-
   return (
     <Modal
-      title="Change lights cycle"
+      title="Confirm new lights cycle"
       visible={modalVisible}
       onOk={handleOk}
       confirmLoading={confirmLoading}
-      onCancel={handleCancel}
+      onCancel={() => setModalVisible(false)}
     >
-      <p>
-        Lights will turn on at {startRange[0]}:00 and off at {startRange[1]}
-        :00
-      </p>
-      <p>Total time on {startRange[1] - startRange[0]} hours.</p>
+      {lightPlan.map((el, index) => (
+        <div key={index}>
+          <p>
+            <b>{el.date === 'start' ? 'Beginning' : `From ${el.date}`}</b>
+          </p>
+          <p>
+            Lights will turn <b>on</b> at {el.on[0]}:00 and <b>off</b> at{' '}
+            {el.off[0]}
+            :00.
+          </p>
+          <p>Total time on {el.off[0] - el.on[0]} hours.</p>
+        </div>
+      ))}
     </Modal>
   );
 };

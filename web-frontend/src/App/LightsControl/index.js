@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import { Slider, Button, Row, Col } from 'antd';
+import { Slider, Button, Row, Col, DatePicker } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery, useMutation } from '@apollo/react-hooks';
+import moment from 'moment';
+
 import { GET_LIGHT_PLAN, UPDATE_LIGHT_PLAN } from 'graphql/light-plan';
+
 import ConfirmationModal from './confirmation-modal';
+
 import { initialState, reducer } from './plan-reducer';
 
 const marks = {};
@@ -60,7 +64,16 @@ export const LightsControl = () => {
         const planIndex = index + 1;
         return (
           <Col key={index} span={24}>
-            <p>{el.date}</p>
+            <DatePicker
+              onChange={(date) =>
+                dispatchPlan({
+                  type: 'changeDate',
+                  payload: { index: planIndex, date },
+                })
+              }
+              defaultValue={moment(el.date)}
+              allowClear={false}
+            />
             <Slider
               range
               marks={marks}

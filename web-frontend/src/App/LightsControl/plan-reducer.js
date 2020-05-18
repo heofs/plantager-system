@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import moment from 'moment';
 export const initialState = [{ date: 'start', on: [6, 0], off: [21, 0] }];
 
 export const reducer = (state, action) => {
@@ -25,13 +25,19 @@ export const reducer = (state, action) => {
       newState[action.payload.index].off = [action.payload.range[1], 0];
       return newState;
 
+    case 'changeDate':
+      state[action.payload.index].date = action.payload.date.format(
+        'YYYY-MM-DD'
+      );
+      return state;
+
     case 'addCycle':
       if (state.length > 1) {
-        newDate = dayjs(state[state.length - 1].date)
+        newDate = moment(state[state.length - 1].date)
           .add(1, 'day')
           .format('YYYY-MM-DD');
       } else {
-        newDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
+        newDate = moment().add(1, 'day').format('YYYY-MM-DD');
       }
 
       return [
