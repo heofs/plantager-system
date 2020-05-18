@@ -49,6 +49,11 @@ export const reducer = (state, action) => {
         },
       ];
 
+    case 'deleteCycle':
+      newState = [...state];
+      newState.splice(action.payload.index);
+      return newState;
+
     default:
       return state;
   }

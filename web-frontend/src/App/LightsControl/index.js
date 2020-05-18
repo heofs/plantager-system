@@ -3,6 +3,7 @@ import { Slider, Button, Row, Col, DatePicker } from 'antd';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import moment from 'moment';
+import styled from 'styled-components';
 
 import { GET_LIGHT_PLAN, UPDATE_LIGHT_PLAN } from 'graphql/light-plan';
 
@@ -14,6 +15,14 @@ const marks = {};
 for (let x = 0; x <= 24; x++) {
   marks[x] = `${x}h`;
 }
+
+const CycleOptions = styled.div`
+  display: flex;
+
+  button {
+    margin-left: auto;
+  }
+`;
 
 export const LightsControl = () => {
   const default_lights = [0, 24];
@@ -64,23 +73,36 @@ export const LightsControl = () => {
         const planIndex = index + 1;
         return (
           <Col key={index} span={24}>
-            <DatePicker
-              onChange={(date) =>
-                dispatchPlan({
-                  type: 'changeDate',
-                  payload: { index: planIndex, date },
-                })
-              }
-              defaultValue={moment(el.date)}
-              allowClear={false}
-            />
+            <CycleOptions>
+              <DatePicker
+                onChange={(date) =>
+                  dispatchPlan({
+                    type: 'changeDate',
+                    payload: { index: planIndex, date },
+                  })
+                }
+                defaultValue={moment(el.date)}
+                allowClear={false}
+              />
+              <Button
+                danger
+                onClick={() =>
+                  dispatchPlan({
+                    type: 'deleteCycle',
+                    payload: { index: planIndex },
+                  })
+                }
+              >
+                Delete Cycle
+              </Button>
+            </CycleOptions>
             <Slider
               range
               marks={marks}
               defaultValue={default_lights}
               max={24}
               dots={true}
-              value={[lightPlan[planIndex].on[0], lightPlan[planIndex].off[0]]}
+              value={[el.on[0], el.off[0]]}
               onChange={(range) => {
                 dispatchPlan({
                   type: 'setDateCycle',
