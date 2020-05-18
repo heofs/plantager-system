@@ -5,3 +5,8 @@
 		Greenhouse controller system.
 	</p>
 </div>
+
+## Setting up environment
+
+Create a new network for containers to communicate.
+`docker network create plantager-network`
