@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
 // import { apolloClient } from 'utils/apollo';
 
-export const GET_LIGHT_CYCLE = gql`
+export const GET_LIGHT_PLAN = gql`
   {
-    lightCycle {
+    lightPlan {
       name
       value {
         date
@@ -14,9 +14,9 @@ export const GET_LIGHT_CYCLE = gql`
   }
 `;
 
-export const UPDATE_LIGHT_CYCLE = gql`
-  mutation UpdateLightCycle($lightCycle: [UpdateLightCycleInput!]!) {
-    updateLightCycle(value: $lightCycle) {
+export const UPDATE_LIGHT_PLAN = gql`
+  mutation UpdateLightPlan($lightPlan: [UpdateLightPlanInput!]!) {
+    updateLightPlan(value: $lightPlan) {
       name
       value {
         date

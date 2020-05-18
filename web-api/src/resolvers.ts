@@ -1,7 +1,7 @@
 const db = require('./db');
 const { ApolloError } = require('apollo-server-express');
 
-const lightsCycleColumn = 'light_cycle';
+const lightsCyclePlan = 'light_plan';
 
 export default {
   Query: {
@@ -19,9 +19,9 @@ export default {
           throw new ApolloError(e.message);
         });
     },
-    lightCycle: (): object => {
+    lightPlan: (): object => {
       const text = 'SELECT * FROM user_settings WHERE name = $1';
-      const values = [lightsCycleColumn];
+      const values = [lightsCyclePlan];
       return db
         .query(text, values)
         .then((res: any) => {
@@ -35,9 +35,9 @@ export default {
     },
   },
   Mutation: {
-    updateLightCycle: (parent: any, args: { name: string; value: JSON }): object => {
+    updateLightPlan: (parent: any, args: { name: string; value: JSON }): object => {
       const text = 'UPDATE user_settings SET value = $1 WHERE name= $2 RETURNING *';
-      const values = [JSON.stringify(args.value), lightsCycleColumn];
+      const values = [JSON.stringify(args.value), lightsCyclePlan];
 
       return db
         .query(text, values)

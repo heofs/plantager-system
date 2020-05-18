@@ -3,20 +3,20 @@ import { gql } from 'apollo-server-express';
 export default gql`
   type Query {
     setting(name: String!): Setting!
-    lightCycle: LightCycle!
+    lightPlan: LightPlan!
   }
 
   type Mutation {
-    updateLightCycle(value: [UpdateLightCycleInput!]!): LightCycle!
+    updateLightPlan(value: [UpdateLightPlanInput!]!): LightPlan!
   }
 
-  input UpdateLightCycleInput {
+  input UpdateLightPlanInput {
     date: String!
     on: [Int]!
     off: [Int]!
   }
 
-  type LightCycle {
+  type LightPlan {
     name: String!
     value: [Cycle]!
   }

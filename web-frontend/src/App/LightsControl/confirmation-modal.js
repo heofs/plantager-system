@@ -4,7 +4,7 @@ import { Modal } from 'antd';
 
 const ConfirmationModal = ({
   onConfirm,
-  lightsRange,
+  lightPlan,
   modalVisible,
   setModalVisible,
 }) => {
@@ -22,6 +22,8 @@ const ConfirmationModal = ({
     console.log('Clicked cancel button');
     setModalVisible(false);
   };
+  const startPlan = lightPlan[0];
+  const startRange = [startPlan.on[0], startPlan.off[0]];
 
   return (
     <Modal
@@ -32,17 +34,17 @@ const ConfirmationModal = ({
       onCancel={handleCancel}
     >
       <p>
-        Lights will turn on at {lightsRange[0]}:00 and off at {lightsRange[1]}
+        Lights will turn on at {startRange[0]}:00 and off at {startRange[1]}
         :00
       </p>
-      <p>Total time on {lightsRange[1] - lightsRange[0]} hours.</p>
+      <p>Total time on {startRange[1] - startRange[0]} hours.</p>
     </Modal>
   );
 };
 
 ConfirmationModal.propTypes = {
   onConfirm: PropTypes.func.isRequired,
-  lightsRange: PropTypes.array,
+  lightPlan: PropTypes.array,
   modalVisible: PropTypes.bool.isRequired,
   setModalVisible: PropTypes.func.isRequired,
 };
