@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { apolloClient } from 'utils/apollo';
 
+import Header from './Header';
 import LightsControl from './LightsControl';
 
 const Wrapper = styled.div`
@@ -19,6 +20,7 @@ const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
       <Wrapper>
+        <Header />
         <LightsControl />
       </Wrapper>
     </ApolloProvider>
