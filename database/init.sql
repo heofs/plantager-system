@@ -11,7 +11,7 @@ CREATE TABLE user_settings(
     created_at TIMESTAMP DEFAULT now()
 );
 
-insert into user_settings (name, value) VALUES ('light_cycle', 
+insert into user_settings (name, value) VALUES ('light_plan', 
 '[{
     "date": "start",
     "on": [9, 0],
