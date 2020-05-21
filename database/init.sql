@@ -6,20 +6,30 @@ CREATE TABLE users(
 );
 
 CREATE TABLE user_settings(
-    name TEXT NOT NULL UNIQUE,
-    value JSON,
+    type TEXT NOT NULL UNIQUE,
+    setting JSON,
     created_at TIMESTAMP DEFAULT now()
 );
 
-insert into user_settings (name, value) VALUES ('light_plan', 
-'[{
-    "date": "start",
-    "on": [9, 0],
-    "off": [21, 0]
-}]') ON CONFLICT (name) DO UPDATE SET value = excluded.value;
+CREATE TABLE sensor_metadata(
+    id TEXT NOT NULL PRIMARY KEY,
+    type TEXT NOT NULL,
+    location TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT now()
+);
 
+CREATE TABLE sensor_data(
+    sensor_id TEXT REFERENCES sensor_metadata(id),
+    location TEXT NOT NULL,
+    value REAL NOT NULL,
+    created_at TIMESTAMP DEFAULT now()
+);
 
+insert into user_settings (type, setting) VALUES ('light_plan', 
+'[{ "date": "start", "on": [9, 0], "off": [21, 0] }]');
 
+insert into user_settings (type, setting) VALUES ('ui', 
+'{ "title": "Your Grow" }');
 
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public to db_user;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to db_user;
