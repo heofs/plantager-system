@@ -13,6 +13,7 @@ db_user = os.getenv("POSTGRES_USER")
 db_pw = os.getenv("POSTGRES_PASSWORD")
 meta_table = 'sensor_metadata'
 data_table = 'sensor_data'
+settings_table = 'user_settings'
 
 
 class Database:
@@ -54,24 +55,96 @@ class Database:
         except (Exception):
             return False
 
+    def add_sensor(self, sensor_id, sensor_type, location):
+        try:
+            c = self.conn.cursor()
+            values = (sensor_id, sensor_type, location)
+            c.execute(
+                f"INSERT INTO {meta_table} (id, type, location) VALUES (%s,%s,%s);",
+                values)
+            self.conn.commit()
+            return True
+        except Exception as err:
+            self.conn.rollback()
+            print(err)
+            return False
+
+    def delete_sensor(self, sensor_id):
+        # TODO
+        # DEACTIVATE SENSOR WHEN DELETED
+        try:
+            c = self.conn.cursor()
+            c.execute(f"DELETE FROM {meta_table} WHERE id=%s;", (sensor_id, ))
+            self.conn.commit()
+            return True
+        except Exception as err:
+            self.conn.rollback()
+            print(err)
+            return False
+
+    def get_active_sensors(self):
+        c = self.conn.cursor()
+        c.execute(
+            f"SELECT value FROM {settings_table} WHERE name='active_sensors';")
+
+        sensor_list = list(c.fetchone())[0]
+        return sensor_list
+
+    def activate_sensor(self, sensor_id):
+        try:
+            active_sensors = self.get_active_sensors()
+            all_sensors = []
+
+            for sensor in self.get_sensor_list():
+                all_sensors.append(sensor['sensor_id'])
+
+            if (not sensor_id in active_sensors and sensor_id in all_sensors):
+                active_sensors.append(sensor_id)
+                c = self.conn.cursor()
+                sensors = json.dumps(active_sensors)
+                print(sensors)
+                values = (sensors, )
+                c.execute(
+                    f"""INSERT INTO {settings_table} (name, value) VALUES ('active_sensors',%s) 
+                    ON CONFLICT (name) DO UPDATE SET value = excluded.value;""",
+                    values)
+                self.conn.commit()
+                return True
+            return False
+
+        except Exception as err:
+            self.conn.rollback()
+            print(err)
+            return False
+
+    def deactivate_sensor(self, sensor_id):
+        # TODO
+        pass
+
 
 if __name__ == "__main__":
     db = Database()
 
-    sensors = db.get_sensor_list()
+    # db.delete_sensor("123sensor")
+    # sensors = db.get_sensor_list()
     # print(sensors)
-    s0 = sensors[0]
 
-    x = 1
-    target = 25
-    while x < target:
-        progress = float((x / target)) * 100.0
-        db.insert_data({
-            "sensor_id": s0['sensor_id'],
-            "location": s0['location'],
-            "value": progress,
-        })
-        print(progress)
-        x += 1
+    db.add_sensor("1sensor", "humidity", "ceiling")
+    db.activate_sensor('1sensor')
+    # print(db.get_active_sensors())
+
+    # s0 = sensors[0]
+
+    # x = 1
+    # target = 25
+    # while x < target:
+    #     progress = float((x / target)) * 100.0
+    #     db.insert_data({
+    #         "sensor_id": s0['sensor_id'],
+    #         "location": s0['location'],
+    #         "value": progress,
+    #     })
+    #     print(progress)
+    #     x += 1
 
     db.close_connection()
