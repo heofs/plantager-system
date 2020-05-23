@@ -20,11 +20,10 @@ CREATE TABLE sensor_data(
 
 insert into user_settings (name, value) VALUES ('light_plan', 
 '[{ "date": "start", "on": [9, 0], "off": [21, 0] }]');
-
 insert into user_settings (name, value) VALUES ('ui', 
 '{ "title": "Your Grow" }');
-
 insert into user_settings (name, value) VALUES ('active_sensors', '[]');
+insert into user_settings (name, value) VALUES ('monitoring', '{}');
 
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public to db_user;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to db_user;
