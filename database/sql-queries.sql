@@ -2,7 +2,7 @@
 SELECT sensor_id, value FROM `sensor-data` A WHERE A.created_at > (strftime('%s','now') - 3600);
 
 -- Insert and update if already existing
-insert into user_settings (type, setting) VALUES ('grow_title', 
+insert into user_settings (name, value) VALUES ('grow_title', 
 'Your Grow') ON CONFLICT (name) DO UPDATE SET value = excluded.value;
 
 -- Insert to relational tables

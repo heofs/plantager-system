@@ -40,10 +40,7 @@ class Database:
 
         return sensor_list
 
-    def insert_data(self, data):
-        sensor_id = data['sensor_id']
-        location = data['location']
-        value = data['value']
+    def insert_data(self, sensor_id, location, value):
         try:
             c = self.conn.cursor()
             values = (sensor_id, location, value)
@@ -51,8 +48,21 @@ class Database:
                 f"INSERT INTO {data_table} (sensor_id, location, value) VALUES (%s,%s,%s);",
                 values)
             self.conn.commit()
-            return data
+            return True
         except (Exception):
+            return False
+
+    def get_data(self, sensor_id):
+        try:
+            c = self.conn.cursor()
+            values = (sensor_id, )
+            c.execute(f"SELECT * FROM {data_table} WHERE sensor_id=%s;",
+                      values)
+            data = c.fetchall()
+            return data
+        except Exception as err:
+            self.conn.rollback()
+            print(err)
             return False
 
     def add_sensor(self, sensor_id, sensor_type, location):
@@ -70,9 +80,8 @@ class Database:
             return False
 
     def delete_sensor(self, sensor_id):
-        # TODO
-        # DEACTIVATE SENSOR WHEN DELETED
         try:
+            self.deactivate_sensor(sensor_id)
             c = self.conn.cursor()
             c.execute(f"DELETE FROM {meta_table} WHERE id=%s;", (sensor_id, ))
             self.conn.commit()
@@ -102,7 +111,7 @@ class Database:
                 active_sensors.append(sensor_id)
                 c = self.conn.cursor()
                 sensors = json.dumps(active_sensors)
-                print(sensors)
+
                 values = (sensors, )
                 c.execute(
                     f"""INSERT INTO {settings_table} (name, value) VALUES ('active_sensors',%s) 
@@ -118,8 +127,45 @@ class Database:
             return False
 
     def deactivate_sensor(self, sensor_id):
-        # TODO
-        pass
+        try:
+            active_sensors = self.get_active_sensors()
+            all_sensors = []
+
+            for sensor in self.get_sensor_list():
+                all_sensors.append(sensor['sensor_id'])
+
+            if (sensor_id in active_sensors and sensor_id in all_sensors):
+                active_sensors.remove(sensor_id)
+                c = self.conn.cursor()
+                sensors = json.dumps(active_sensors)
+
+                values = (sensors, )
+                c.execute(
+                    f"""INSERT INTO {settings_table} (name, value) VALUES ('active_sensors',%s) 
+                    ON CONFLICT (name) DO UPDATE SET value = excluded.value;""",
+                    values)
+                self.conn.commit()
+                return True
+            return False
+
+        except Exception as err:
+            self.conn.rollback()
+            print(err)
+            return False
+
+    def get_setting(self, name):
+        c = self.conn.cursor()
+        c.execute(f"SELECT * FROM {settings_table} WHERE name=%s", (name, ))
+        data = c.fetchone()
+        return {"name": data[0], "value": data[1]}
+
+    def update_setting(self, name, value):
+        values = (value, name)
+        c = self.conn.cursor()
+        c.execute(f"UPDATE {settings_table} SET value=%s WHERE name=%s",
+                  values)
+        self.conn.commit()
+        return {'name': name, 'value': value}
 
 
 if __name__ == "__main__":
